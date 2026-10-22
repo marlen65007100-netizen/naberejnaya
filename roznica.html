@@ -50,6 +50,7 @@ h2{font-family:var(--display);font-size:24px;margin:28px 0 4px;color:var(--green
 .list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
 .item{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px 10px 8px 8px}
 .item.on{border-color:var(--lime);box-shadow:0 0 0 2px var(--lime) inset}
+.noimg{width:72px;height:90px;border-radius:10px;background:var(--green);color:var(--onaccent);display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;font-weight:700;line-height:1.2;text-transform:uppercase;letter-spacing:.05em}
 .item img{width:72px;height:90px;object-fit:cover;border-radius:10px;display:block}
 .txt{min-width:0}
 .nm{font-weight:600;font-size:16px;line-height:1.2}
@@ -148,24 +149,30 @@ const CATS = [
  {id:"kompot",t:"Компоты",v:"3 л",items:[
   ["a1d73332","Вишня","компот","3 л"],["e458a056","Ассорти","компот","3 л"],["aad208ba","Айва","компот","3 л"]]},
  {id:"prem",t:"MARLEN ZOLOTOY",v:"премиум",prem:true,items:[
-  ["8283","Аджика","острая приправа","320 г"],["8285","Перец стручковый","маринованный","320 г"],["3cf15d91","Шампиньоны","маринованные","1 л"],["eb5bfffd","Листья винограда","консервированные","1 л"]]}
+  ["8283","Аджика","острая приправа","320 г"],["8285","Перец стручковый","маринованный","320 г"],["3cf15d91","Шампиньоны","маринованные","1 л"],["eb5bfffd","Листья винограда","консервированные","1 л"]]},
+ {id:"ves",t:"На развес",v:"кг",kg:true,items:[
+  [null,"Капуста квашеная","на развес","кг"],[null,"Капуста по-армянски","на развес","кг"],[null,"Чимчи","на развес","кг"],[null,"Чимчи корейская","на развес","кг"],
+  [null,"Огурцы солёные","бочковые","кг"],[null,"Помидоры солёные","бочковые","кг"],[null,"Огурцы маринованные","на развес","кг"],
+  [null,"Огурцы малосольные","на развес","кг"],[null,"Помидоры малосольные","на развес","кг"]]}
 ];
 const ALL=[]; let n=0;
-CATS.forEach(c=>c.items.forEach(it=>{n++;ALL.push({no:n,img:it[0],name:it[1],kind:it[2],vol:it[3],cat:c})}));
+CATS.forEach(c=>c.items.forEach(it=>{n++;ALL.push({no:n,img:it[0],name:it[1],kind:it[2],vol:it[3],cat:c,kg:!!c.kg})}));
 const q={}; try{Object.assign(q,JSON.parse(localStorage.getItem("nb-order-sht")||"{}"))}catch(e){}
 const blk=k=>k+" шт";
+const fmt=(p,k)=>p.kg?k+" кг":blk(k);
+const totals=c=>{const u=c.filter(p=>!p.kg).reduce((s,p)=>s+q[p.no],0),w=c.filter(p=>p.kg).reduce((s,p)=>s+q[p.no],0);return [u?blk(u):"",w?w+" кг":""].filter(Boolean).join(" + ")||blk(0)};
 const $=id=>document.getElementById(id);
 $("nav").innerHTML=CATS.map(c=>`<a href="#${c.id}">${c.t}</a>`).join("");
 $("list").innerHTML=CATS.map(c=>`<section id="${c.id}" class="${c.prem?'prem':''}"><div class="shelf"><h2>${c.t}</h2><small>${c.v}</small></div><div class="list">`+
-  ALL.filter(p=>p.cat===c).map(p=>`<div class="item" id="it${p.no}"><img src="p/${p.img}.jpg" alt="${p.name}" loading="lazy" width="72" height="90">
+  ALL.filter(p=>p.cat===c).map(p=>`<div class="item" id="it${p.no}">${p.img?`<img src="p/${p.img}.jpg" alt="${p.name}" loading="lazy" width="72" height="90">`:`<div class="noimg" aria-hidden="true">на<br>развес</div>`}
   <div class="txt"><div class="nm"><i>№${p.no}</i>${p.name}</div><div class="kd">${p.kind}${c.prem?' · MARLEN ZOLOTOY':''}</div><span class="vol">${p.vol}</span></div>
-  <div class="step"><button class="minus" data-no="${p.no}" data-d="-1" aria-label="Убрать 1 шт: ${p.name}">−</button><div class="qty" id="q${p.no}">0<small>шт</small></div><button class="plus" data-no="${p.no}" data-d="1" aria-label="Добавить 1 шт: ${p.name}">+</button></div></div>`).join("")+`</div></section>`).join("");
+  <div class="step"><button class="minus" data-no="${p.no}" data-d="-1" aria-label="Убрать 1: ${p.name}">−</button><div class="qty" id="q${p.no}">0<small>${p.kg?"кг":"шт"}</small></div><button class="plus" data-no="${p.no}" data-d="1" aria-label="Добавить 1: ${p.name}">+</button></div></div>`).join("")+`</div></section>`).join("");
 function render(){
   let tot=0,pos=0;
   ALL.forEach(p=>{const k=q[p.no]||0;tot+=k;if(k)pos++;
     $("q"+p.no).firstChild.nodeValue=k;$("it"+p.no).classList.toggle("on",k>0);
     $("it"+p.no).querySelector(".minus").disabled=!k;});
-  $("tot").textContent=blk(tot);
+  $("tot").textContent=totals(chosen());
   $("pos").textContent=pos?("Товаров: "+pos):"Ничего не выбрано";
   $("go").disabled=!tot;
   try{localStorage.setItem("nb-order-sht",JSON.stringify(q))}catch(e){}
@@ -176,7 +183,7 @@ const chosen=()=>ALL.filter(p=>q[p.no]);
 let text="";
 function openSheet(){
   const c=chosen(),tot=c.reduce((s,p)=>s+q[p.no],0);
-  $("rows").innerHTML=c.map(p=>`<div class="row"><span>№${p.no} ${p.name} ${p.kind}${p.cat.prem?' (MZ)':''}, ${p.vol}</span><span>${blk(q[p.no])}</span></div>`).join("")+`<div class="row"><span>Всего</span><span>${blk(tot)}</span></div>`;
+  $("rows").innerHTML=c.map(p=>`<div class="row"><span>№${p.no} ${p.name} ${p.kind}${p.cat.prem?' (MZ)':''}, ${p.vol}</span><span>${fmt(p,q[p.no])}</span></div>`).join("")+`<div class="row"><span>Всего</span><span>${totals(c)}</span></div>`;
   $("step1").hidden=false;$("step2").hidden=true;$("err").hidden=true;$("sheet").hidden=false;
   try{const s=JSON.parse(localStorage.getItem("nb-client")||"{}");["name","phone","addr","com"].forEach(k=>{if(s[k]&&!$("f-"+k).value)$("f-"+k).value=s[k]})}catch(e){}
 }
@@ -189,8 +196,8 @@ $("confirm").onclick=()=>{
   if(!f.name||f.phone.replace(/\D/g,"").length<9){$("err").textContent="Укажите имя и номер телефона полностью.";$("err").hidden=false;return}
   try{localStorage.setItem("nb-client",JSON.stringify(f))}catch(e){}
   const c=chosen(),tot=c.reduce((s,p)=>s+q[p.no],0);
-  text="🧾 ЗАКАЗ (ШТУЧНО) — НАБЕРЕЖНАЯ\n\n"+c.map(p=>`№${p.no} ${p.name} ${p.kind}${p.cat.prem?' (MARLEN ZOLOTOY)':''} ${p.vol} — ${blk(q[p.no])}`).join("\n")+
-    `\n\nВсего: ${blk(tot)}\n\n👤 ${f.name}\n📞 ${f.phone}`+(f.addr?`\n📍 ${f.addr}`:"")+(f.com?`\n💬 ${f.com}`:"");
+  text="🧾 ЗАКАЗ (ШТУЧНО) — НАБЕРЕЖНАЯ\n\n"+c.map(p=>`№${p.no} ${p.name} ${p.kind}${p.cat.prem?' (MARLEN ZOLOTOY)':''} ${p.kg?'':p.vol+' '}— ${fmt(p,q[p.no])}`).join("\n")+
+    `\n\nВсего: ${totals(c)}\n\n👤 ${f.name}\n📞 ${f.phone}`+(f.addr?`\n📍 ${f.addr}`:"")+(f.com?`\n💬 ${f.com}`:"");
   $("msg").textContent=text;$("ph").textContent=PHONE;
   $("tg").href=TG_USERNAME?`https://t.me/${TG_USERNAME}?text=${encodeURIComponent(text)}`:`https://t.me/+${PHONE.replace(/\D/g,"")}?text=${encodeURIComponent(text)}`;
   $("step1").hidden=true;$("step2").hidden=false;
