@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Каталог продукции «Набережная»: выберите товары поштучно и отправьте заказ в Telegram.">
+<meta property="og:title" content="Каталог Набережная">
+<meta property="og:description" content="Соленья, консервация и компоты. Выберите товары и отправьте заказ в Telegram.">
+<meta property="og:image" content="https://marlen65007100-netizen.github.io/naberejnaya/og.jpg">
+<meta name="theme-color" content="#1d4a2a">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Каталог Набережная</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Golos+Text:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: phone-first order list, grouped by shelf; sticky bottom bar carries the running block count */
+:root{
+  --bg:#f3f0e6; --surface:#fffdf6; --ink:#1f2a1c; --muted:#66705f; --line:#e2dccb;
+  --green:#1f4a2b; --lime:#8cc63f; --red:#b3262c; --gold:#a97c24; --onaccent:#ffffff;
+  --display:"Lora",Georgia,serif; --body:"Golos Text","Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121a13; --surface:#1b251c; --ink:#eef0e6; --muted:#a3ad9b; --line:#2c3a2d;
+  --green:#9fd45a; --lime:#8cc63f; --red:#e0484e; --gold:#d9b25c; --onaccent:#10200f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121a13; --surface:#1b251c; --ink:#eef0e6; --muted:#a3ad9b; --line:#2c3a2d;
+  --green:#9fd45a; --lime:#8cc63f; --red:#e0484e; --gold:#d9b25c; --onaccent:#10200f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.4;margin:0}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{background:#1d4a2a;color:#fff}
+header .wrap{padding-block:28px 22px}
+.brand{font-family:var(--display);font-weight:700;font-size:clamp(30px,8vw,44px);letter-spacing:2px;line-height:1}
+.lead{margin:10px 0 0;opacity:.9;font-size:15px;max-width:52ch}
+.how{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;font-size:13px}
+.how span{background:rgba(255,255,255,.12);border-radius:999px;padding:6px 12px}
+.how b{color:#b9e27f}
+.stripe{height:6px;background:repeating-linear-gradient(90deg,#8cc63f 0 70px,#b3262c 70px 88px)}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+nav .wrap{display:flex;gap:8px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
+nav a{flex:none;text-decoration:none;color:var(--ink);font-size:14px;font-weight:500;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px}
+nav a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
+main{padding-bottom:130px}
+section{scroll-margin-top:64px}
+h2{font-family:var(--display);font-size:24px;margin:28px 0 4px;color:var(--green);text-wrap:balance}
+.shelf{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.shelf small{color:var(--muted);font-size:13px;white-space:nowrap}
+.list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.item{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px 10px 8px 8px}
+.item.on{border-color:var(--lime);box-shadow:0 0 0 2px var(--lime) inset}
+.item img{width:72px;height:90px;object-fit:cover;border-radius:10px;display:block}
+.txt{min-width:0}
+.nm{font-weight:600;font-size:16px;line-height:1.2}
+.nm i{font-style:normal;color:var(--muted);font-weight:500;font-size:13px;margin-right:4px;font-variant-numeric:tabular-nums}
+.kd{color:var(--muted);font-size:13px;margin-top:2px}
+.vol{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;color:var(--green);border:1.5px solid var(--green);border-radius:999px;padding:1px 9px}
+.prem .vol{color:var(--gold);border-color:var(--gold)}
+.step{display:flex;align-items:center;gap:4px}
+.step button{width:42px;height:42px;border-radius:12px;border:none;font-size:24px;font-weight:600;cursor:pointer;line-height:1;font-family:var(--body)}
+.minus{background:var(--line);color:var(--ink)}
+.plus{background:var(--green);color:var(--onaccent)}
+.minus:disabled{opacity:.35;cursor:default}
+.qty{min-width:34px;text-align:center;font-weight:700;font-size:18px;font-variant-numeric:tabular-nums}
+.qty small{display:block;font-size:10px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);box-shadow:0 -6px 20px rgba(0,0,0,.08)}
+.bar .wrap{display:flex;align-items:center;gap:12px;padding-block:12px}
+.sum{flex:1;min-width:0}
+.sum b{font-size:20px;font-variant-numeric:tabular-nums}
+.sum span{display:block;color:var(--muted);font-size:13px}
+.go{background:var(--red);color:#fff;border:none;border-radius:14px;font-size:18px;font-weight:700;padding:14px 26px;cursor:pointer;font-family:var(--body)}
+.go:disabled{background:var(--line);color:var(--muted);cursor:default}
+[hidden]{display:none!important}
+/* checkout sheet */
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(10,20,10,.55);display:flex;align-items:flex-end;justify-content:center}
+.panel{background:var(--bg);width:100%;max-width:760px;max-height:92%;overflow-y:auto;border-radius:22px 22px 0 0;padding:20px max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.panel h3{font-family:var(--display);font-size:24px;margin:0 0 12px;color:var(--green)}
+.rows{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:6px 14px;margin-bottom:14px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:15px}
+.row:last-child{border:none;font-weight:700}
+.row span:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:10px 0 4px}
+input,textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+textarea{min-height:64px;resize:vertical}
+.err{color:var(--red);font-size:14px;margin-top:8px}
+.acts{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.tg{display:block;text-align:center;text-decoration:none;background:#2a9fd8;color:#fff;border-radius:14px;padding:15px;font-size:18px;font-weight:700}
+.sec{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:14px;padding:13px;font-size:16px;font-weight:600;cursor:pointer;font-family:var(--body)}
+.note{font-size:13px;color:var(--muted);margin-top:12px;line-height:1.5}
+.phone{font-weight:700;color:var(--ink);user-select:all}
+pre.msg{white-space:pre-wrap;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;font-family:var(--body);font-size:14px;margin:0;max-height:30vh;overflow:auto}
+@media (prefers-reduced-motion:no-preference){.item{transition:border-color .15s,box-shadow .15s}}
+</style>
+
+</head><body>
+<header><div class="wrap">
+  <div class="brand">НАБЕРЕЖНАЯ</div>
+  <p class="lead">Заказ поштучно · Donalab buyurtma</p>
+  <div class="how"><span><b>1</b> Нажмите «+» у нужных товаров</span><span><b>2</b> Нажмите «Готово»</span><span><b>3</b> Отправьте заказ в Telegram</span></div>
+</div></header>
+<div class="stripe"></div>
+<nav><div class="wrap" id="nav"></div></nav>
+<main><div class="wrap" id="list"></div></main>
+
+<div class="bar"><div class="wrap">
+  <div class="sum"><b id="tot">0 шт</b><span id="pos">Ничего не выбрано</span></div>
+  <button class="go" id="go" disabled>Готово</button>
+</div></div>
+
+<div class="sheet" id="sheet" hidden><div class="panel" role="dialog" aria-modal="true" aria-labelledby="sh-t">
+  <div id="step1">
+    <h3 id="sh-t">Ваш заказ</h3>
+    <div class="rows" id="rows"></div>
+    <label for="f-name">Имя или название магазина *</label><input id="f-name" autocomplete="organization">
+    <label for="f-phone">Телефон *</label><input id="f-phone" type="tel" inputmode="tel" placeholder="+998 __ ___ __ __" autocomplete="tel">
+    <label for="f-addr">Адрес доставки</label><input id="f-addr" autocomplete="street-address">
+    <label for="f-com">Комментарий</label><textarea id="f-com" placeholder="Например: привезти в пятницу"></textarea>
+    <div class="err" id="err" hidden></div>
+    <div class="acts"><button class="go" id="confirm">Оформить заказ</button><button class="sec" id="back1">Изменить заказ</button></div>
+  </div>
+  <div id="step2" hidden>
+    <h3>Отправьте заказ</h3>
+    <p class="note" style="margin-top:0">Нажмите синюю кнопку. Откроется Telegram сразу в чате с нами, с готовым текстом заказа — останется нажать «Отправить».</p>
+    <a class="tg" id="tg" href="#" target="_blank" rel="noopener">Отправить в Telegram</a>
+    <div class="acts"><button class="sec" id="copy">Скопировать текст заказа</button><button class="sec" id="back2">Назад</button></div>
+    <p class="note">Если Telegram не открылся: скопируйте текст и отправьте его на номер <span class="phone" id="ph"></span> в Telegram.</p>
+    <pre class="msg" id="msg"></pre>
+  </div>
+</div></div>
+
+<script>
+// ===== Настройки =====
+const TG_USERNAME = "";               // Telegram username Марлена без @ (когда будет — заказ откроется сразу в его чате)
+const PHONE = "+998 95 888 61 27";
+// =====================
+const CATS = [
+ {id:"marinad",t:"Маринованные овощи",v:"1 л",items:[
+  ["8291","Корнишоны","маринованные","1 л"],["7765","Помидоры красные","маринованные","1 л"],["8354d3a1","Помидоры жёлтые","маринованные","1 л"],
+  ["8289","Патиссоны","маринованные","1 л"],["8288","Перец дунганский","маринованный","1 л"],["22281549","Перец стручковый","маринованный","1 л"],
+  ["8286","Чеснок","маринованный","1 л"],["cd8a0999","Листья винограда","консервированные","1 л"]]},
+ {id:"tomat",t:"В томатном соке",v:"1 л",items:[
+  ["8293","Огурцы","в томатном соке","1 л"],["1cf1c83e","Помидоры","в томатном соке","1 л"],["56b0af95","Помидоры очищенные","в томате","1 л"],["4daee8b3","Ассорти","в томатном соке","1 л"]]},
+ {id:"sous",t:"Соусы, икра, закуски",v:"320 г – 1 л",items:[
+  ["1e5b35e7","Приправа для блюд","универсальная","1 л"],["41e951b2","Аджика","по-домашнему","320 г"],["f8d43fd0","Икра баклажановая","по-домашнему","430 г"],["f8c42fcd","Перец стручковый","маринованный","320 г"]]},
+ {id:"big",t:"Соленья 3 л",v:"3 л",items:[
+  ["44d51ecd","Огурцы №2","маринованные","3 л"],["f815d5ff","Огурцы №3","маринованные","3 л"],["e0fc4810","Корнишоны","маринованные","3 л"]]},
+ {id:"kompot",t:"Компоты",v:"3 л",items:[
+  ["a1d73332","Вишня","компот","3 л"],["e458a056","Ассорти","компот","3 л"],["aad208ba","Айва","компот","3 л"]]},
+ {id:"prem",t:"MARLEN ZOLOTOY",v:"премиум",prem:true,items:[
+  ["8283","Аджика","острая приправа","320 г"],["8285","Перец стручковый","маринованный","320 г"],["3cf15d91","Шампиньоны","маринованные","1 л"],["eb5bfffd","Листья винограда","консервированные","1 л"]]}
+];
+const ALL=[]; let n=0;
+CATS.forEach(c=>c.items.forEach(it=>{n++;ALL.push({no:n,img:it[0],name:it[1],kind:it[2],vol:it[3],cat:c})}));
+const q={}; try{Object.assign(q,JSON.parse(localStorage.getItem("nb-order-sht")||"{}"))}catch(e){}
+const blk=k=>k+" шт";
+const $=id=>document.getElementById(id);
+$("nav").innerHTML=CATS.map(c=>`<a href="#${c.id}">${c.t}</a>`).join("");
+$("list").innerHTML=CATS.map(c=>`<section id="${c.id}" class="${c.prem?'prem':''}"><div class="shelf"><h2>${c.t}</h2><small>${c.v}</small></div><div class="list">`+
+  ALL.filter(p=>p.cat===c).map(p=>`<div class="item" id="it${p.no}"><img src="p/${p.img}.jpg" alt="${p.name}" loading="lazy" width="72" height="90">
+  <div class="txt"><div class="nm"><i>№${p.no}</i>${p.name}</div><div class="kd">${p.kind}${c.prem?' · MARLEN ZOLOTOY':''}</div><span class="vol">${p.vol}</span></div>
+  <div class="step"><button class="minus" data-no="${p.no}" data-d="-1" aria-label="Убрать 1 шт: ${p.name}">−</button><div class="qty" id="q${p.no}">0<small>шт</small></div><button class="plus" data-no="${p.no}" data-d="1" aria-label="Добавить 1 шт: ${p.name}">+</button></div></div>`).join("")+`</div></section>`).join("");
+function render(){
+  let tot=0,pos=0;
+  ALL.forEach(p=>{const k=q[p.no]||0;tot+=k;if(k)pos++;
+    $("q"+p.no).firstChild.nodeValue=k;$("it"+p.no).classList.toggle("on",k>0);
+    $("it"+p.no).querySelector(".minus").disabled=!k;});
+  $("tot").textContent=blk(tot);
+  $("pos").textContent=pos?("Товаров: "+pos):"Ничего не выбрано";
+  $("go").disabled=!tot;
+  try{localStorage.setItem("nb-order-sht",JSON.stringify(q))}catch(e){}
+}
+document.addEventListener("click",e=>{const b=e.target.closest("button[data-no]");if(!b)return;
+  const no=+b.dataset.no;q[no]=Math.max(0,(q[no]||0)+ +b.dataset.d);if(!q[no])delete q[no];render();});
+const chosen=()=>ALL.filter(p=>q[p.no]);
+let text="";
+function openSheet(){
+  const c=chosen(),tot=c.reduce((s,p)=>s+q[p.no],0);
+  $("rows").innerHTML=c.map(p=>`<div class="row"><span>№${p.no} ${p.name} ${p.kind}${p.cat.prem?' (MZ)':''}, ${p.vol}</span><span>${blk(q[p.no])}</span></div>`).join("")+`<div class="row"><span>Всего</span><span>${blk(tot)}</span></div>`;
+  $("step1").hidden=false;$("step2").hidden=true;$("err").hidden=true;$("sheet").hidden=false;
+  try{const s=JSON.parse(localStorage.getItem("nb-client")||"{}");["name","phone","addr","com"].forEach(k=>{if(s[k]&&!$("f-"+k).value)$("f-"+k).value=s[k]})}catch(e){}
+}
+$("go").onclick=openSheet;
+$("back1").onclick=()=>{$("sheet").hidden=true};
+$("back2").onclick=()=>{$("step1").hidden=false;$("step2").hidden=true};
+$("sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("sheet").hidden=true});
+$("confirm").onclick=()=>{
+  const f={};["name","phone","addr","com"].forEach(k=>f[k]=$("f-"+k).value.trim());
+  if(!f.name||f.phone.replace(/\D/g,"").length<9){$("err").textContent="Укажите имя и номер телефона полностью.";$("err").hidden=false;return}
+  try{localStorage.setItem("nb-client",JSON.stringify(f))}catch(e){}
+  const c=chosen(),tot=c.reduce((s,p)=>s+q[p.no],0);
+  text="🧾 ЗАКАЗ (ШТУЧНО) — НАБЕРЕЖНАЯ\n\n"+c.map(p=>`№${p.no} ${p.name} ${p.kind}${p.cat.prem?' (MARLEN ZOLOTOY)':''} ${p.vol} — ${blk(q[p.no])}`).join("\n")+
+    `\n\nВсего: ${blk(tot)}\n\n👤 ${f.name}\n📞 ${f.phone}`+(f.addr?`\n📍 ${f.addr}`:"")+(f.com?`\n💬 ${f.com}`:"");
+  $("msg").textContent=text;$("ph").textContent=PHONE;
+  $("tg").href=TG_USERNAME?`https://t.me/${TG_USERNAME}?text=${encodeURIComponent(text)}`:`https://t.me/+${PHONE.replace(/\D/g,"")}?text=${encodeURIComponent(text)}`;
+  $("step1").hidden=true;$("step2").hidden=false;
+};
+$("copy").onclick=()=>{const b=$("copy");
+  const ok=()=>{b.textContent="Скопировано ✓";setTimeout(()=>b.textContent="Скопировать текст заказа",2000)};
+  const sel=()=>{const r=document.createRange();r.selectNodeContents($("msg"));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="Текст выделен — скопируйте его"};
+  if(navigator.clipboard)navigator.clipboard.writeText(text).then(ok,sel);else sel();
+};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("sheet").hidden=true});
+render();
+</script>
+
+<script>
+// Внутри Telegram (кнопка «Каталог» в боте): открываем чат средствами Telegram
+(function(){const tg=window.Telegram&&Telegram.WebApp; if(!tg||!tg.initData) return;
+  tg.ready(); tg.expand();
+  document.getElementById("tg").addEventListener("click",e=>{e.preventDefault(); tg.openTelegramLink(e.currentTarget.href);});
+})();
+</script>
+</body></html>
