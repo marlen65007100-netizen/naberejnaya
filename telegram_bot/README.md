@@ -12,6 +12,21 @@
 
 Для постоянной работы нужен один платный Web Service с диском. Free-план не подходит для этого варианта: он засыпает и не поддерживает постоянный диск. Выбор платного плана нужно согласовать до создания сервиса.
 
+### Запуск через готовую конфигурацию
+
+В корне репозитория есть `render.yaml`: один Web Service `naberejnaya-marketbot`, план `0.5c-512mb` (бывший Starter), регион Frankfurt, один экземпляр и постоянный диск 1 ГБ в `/var/data`. Перед созданием проверьте и подтвердите регулярную стоимость в Render.
+
+1. Открыть [готовую настройку Render](https://dashboard.render.com/blueprint/new?repo=https://github.com/marlen65007100-netizen/naberejnaya), выбрать `My Workspace` и ветку `main`.
+2. В поле `BOT_TOKEN` вставить токен из BotFather. Он сохраняется только в закрытых настройках Render.
+3. Проверить тариф и создать Blueprint. Render сам выполнит 24 теста и запустит бота.
+4. После статуса Live открыть @naberejnayamarketbot в Telegram, нажать Start и отправить `/id`.
+5. Добавить в настройках сервиса Environment переменную `ADMIN_CHAT_ID` с полученным числом и сохранить с перезапуском. До этого приём заказов отключён; просмотр каталога и команда `/id` доступны.
+6. Проверить `/health`: `running: true, orders_configured: true`, затем провести реальный пробный заказ и убедиться, что он пришёл владельцу.
+
+`ADMIN_CHAT_ID` не задаётся в Blueprint: первый запуск использует значение `0`, а последующие обновления сохраняют добавленный вручную ID владельца.
+
+### Ручная настройка
+
 1. Создать Web Service из репозитория в согласованном пространстве `My Workspace`.
 2. Runtime: Python. Build Command: `python -m compileall -q telegram_bot`. Start Command: `python telegram_bot/bot.py`. Health Check Path: `/health`. Запускать ровно один экземпляр.
 3. Подключить диск 1 ГБ с Mount Path `/var/data`.

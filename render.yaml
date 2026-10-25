@@ -1,0 +1,24 @@
+# Paid Render service. Review its recurring cost before applying.
+services:
+  - type: web
+    name: naberejnaya-marketbot
+    runtime: python
+    plan: 0.5c-512mb
+    region: frankfurt
+    branch: main
+    numInstances: 1
+    autoDeployTrigger: commit
+    buildCommand: python -m unittest discover -s telegram_bot/tests -q
+    startCommand: python telegram_bot/bot.py
+    healthCheckPath: /health
+    disk:
+      name: marketbot-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: BOT_DB_PATH
+        value: /var/data/marketbot.sqlite3
+      - key: PYTHONUNBUFFERED
+        value: "1"
